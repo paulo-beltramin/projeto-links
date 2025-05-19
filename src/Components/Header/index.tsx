@@ -1,12 +1,14 @@
 import { Link } from "react-router"
-import { GoSignIn, GoSignOut } from "react-icons/go";
-
-
+import { GoSignOut } from "react-icons/go";
+import { signOut } from "firebase/auth";
+import { auth } from '../Services/db'
 
 
 export const Header = () => {
 
-
+  const handleLogout = async () => {
+    return signOut(auth)
+  }
 
   return (
     <div>
@@ -19,10 +21,9 @@ export const Header = () => {
           </div>
 
           <div className="flex text-red-600 text-2xl ">
-            <span>
-              <GoSignIn />
+            <span onClick={handleLogout} className="cursor-pointer">
+              <GoSignOut />
             </span>
-            <span className="hidden"><GoSignOut /></span>
           </div>
         </nav>
       </header>
