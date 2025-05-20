@@ -22,7 +22,7 @@ const Admin = () => {
   const [colorLink, setColorLink] = useState('#ffff')
   const [link, setLink] = useState<linkProps[]>([])
 
-  
+
 
   const handleRegisterLinks = (e: FormEvent) => {
     e.preventDefault()
@@ -45,7 +45,7 @@ const Admin = () => {
       .catch((error) => {
         alert('Erro as cadastrar' + error)
       })
-  
+
   }
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const Admin = () => {
               value={urlLink} onChange={e => setUrlLink(e.target.value)} />
 
           </div>
-          <div className="mt-6 text-white flex gap-2 ml-40 max-md:ml-10">
+          <div className="mt-6 text-white flex gap-2 mx-auto max-md:ml-10">
 
             <label>Cor do link</label>
             <input type="color" value={colorLink} onChange={e => setColorLink(e.target.value)} />
@@ -111,7 +111,7 @@ const Admin = () => {
               <div>
                 <h4 className="text-center text-white font-bold mt-6 mb-6">Pré-visualização...</h4>
               </div>
-              <Link to={''} className=' max-md:w-11/12 lg:w-2xl mx-auto my-0 p-2 rounded-md text-gray-50 text-lg mb-5'
+              <Link to={''} className=' max-md:w-11/12  w-2xl mx-auto my-0 p-2 rounded-md text-gray-50 text-lg mb-5'
                 style={{ background: backBottom }}>
                 <span className="flex justify-between items-center px-4" style={{ color: colorLink }}>
 
@@ -132,8 +132,8 @@ const Admin = () => {
           <>
             {link.map((item) => (
               <>
-                <Link to={''} key={item.id} className=" flex w-2xl max-md:w-2xl mx-auto p-2 rounded-md text-lg mb-5 " style={{ background: `${item.background}`, color: `${item.color}` }}>
-                  <span className="flex justify-between w-full">
+                <Link to={''} key={item.id} className=" flex w-2xl max-md:w-11/12 mx-auto p-2 rounded-md text-lg mb-5 " style={{ background: `${item.background}`, color: `${item.color}` }}>
+                  <span className="flex justify-between w-full ">
 
                     <p className=" mx-auto">
                       {item.nameLink}

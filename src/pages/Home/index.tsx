@@ -65,7 +65,7 @@ export const Home = () => {
                 {links && links.map((item) => (
 
 
-                    <div key={item.id} className='mb-4  w-2xl my-0 mx-auto ' >
+                    <div key={item.id} className='mb-4  w-2xl my-0 mx-auto max-md:w-2xs ' >
                         <Link to={`${item.url}`} target='_blank'>
                             <span style={{ background: item.background, color: item.color }} className='py-1 px-4 rounded-lg block '>
                                 {item.nameLink}
