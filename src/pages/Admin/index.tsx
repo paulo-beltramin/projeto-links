@@ -2,15 +2,16 @@ import { Link } from "react-router"
 import { Header } from "../../Components/Header"
 import { MdDelete } from "react-icons/md"
 import { useEffect, useState, type FormEvent } from "react"
-import { addDoc, collection, onSnapshot, query, } from "firebase/firestore"
+import { addDoc, collection, deleteDoc, doc, onSnapshot, query, } from "firebase/firestore"
 import { db } from "../../Components/Services/db"
 
 
-type linkProps = {
+export type linkProps = {
   id: string,
   nameLink: string,
   color: string,
-  background: string
+  background: string,
+  url?: string
 }
 
 const Admin = () => {
@@ -21,13 +22,11 @@ const Admin = () => {
   const [colorLink, setColorLink] = useState('#ffff')
   const [link, setLink] = useState<linkProps[]>([])
 
+  
+
   const handleRegisterLinks = (e: FormEvent) => {
     e.preventDefault()
 
-
-    if (nameLink && urlLink === '') {
-      alert('preencha os campos obrigatorios')
-    }
 
     addDoc(collection(db, "links"), {
       nameLink: nameLink,
@@ -38,6 +37,7 @@ const Admin = () => {
     })
 
       .then(() => {
+
         setNameLink('');
         setUrlLink('')
         alert('Adicionando com sucesso')
@@ -45,7 +45,7 @@ const Admin = () => {
       .catch((error) => {
         alert('Erro as cadastrar' + error)
       })
-
+  
   }
 
   useEffect(() => {
@@ -72,6 +72,12 @@ const Admin = () => {
     }
   }, [])
 
+  const handleDelete = async (id: string) => {
+    const refDoc = doc(db, "links", id)
+
+    await deleteDoc(refDoc)
+
+  }
 
   return (
     <div>
@@ -81,13 +87,13 @@ const Admin = () => {
         <form className=" flex flex-col " onSubmit={handleRegisterLinks}>
           <div className=" mx-auto">
             <label className="  text-white mt-9 text-base block">Nome do link</label>
-            <input className=" max-md:w-[300px]   bg-white w-2xl py-1 px-4 mt-0.5" type="text" placeholder="Digite o nome do link..."
+            <input className=" max-md:w-[300px]   bg-white w-2xl py-1 px-4 mt-0.5" type="text" placeholder="Digite o nome do link..." required
               value={nameLink} onChange={e => setNameLink(e.target.value)} />
           </div>
 
           <div className="my-0 mx-auto">
             <label className="text-white mt-2 text-base block">Url do link</label>
-            <input className="max-md:w-[300px] bg-white w-2xl py-1 px-4 mt-0.5" type="url" placeholder="Insira a url do link..."
+            <input className="max-md:w-[300px] bg-white w-2xl py-1 px-4 mt-0.5" type="url" placeholder="Insira a url do link..." required
               value={urlLink} onChange={e => setUrlLink(e.target.value)} />
 
           </div>
@@ -112,8 +118,6 @@ const Admin = () => {
                   <p className=" mx-auto">
                     {nameLink}
                   </p>
-
-                  <MdDelete size={30} color="white" className="bg-black p-1 cursor-pointer rounded-2xl" />
                 </span>
               </Link>
             </>
@@ -134,8 +138,7 @@ const Admin = () => {
                     <p className=" mx-auto">
                       {item.nameLink}
                     </p>
-                    <MdDelete size={30} color="white" className="bg-black p-1 cursor-pointer rounded-2xl" />
-
+                    <MdDelete size={30} color="white" className="bg-black p-1 cursor-pointer rounded-2xl" onClick={() => handleDelete(item.id)} />
                   </span>
                 </Link>
               </>
