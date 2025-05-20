@@ -8,13 +8,8 @@ const Admin = () => {
 
   const [nameLink, setNameLink] = useState('')
   const [urlLink, setUrlLink] = useState('')
-  const [backBottom, setBackBottom] = useState('#A9A9A9')
-  const [colorLink, setColorLink] = useState('#000080')
-
-  const handleColorLink = () => {
-
-  }
-
+  const [backBottom, setBackBottom] = useState('#000')
+  const [colorLink, setColorLink] = useState('#ffff')
 
   return (
     <div>
@@ -37,25 +32,35 @@ const Admin = () => {
           <div className="mt-6 text-white flex gap-2 ml-40 max-md:ml-10">
 
             <label>Cor do link</label>
-            <input type="color" value={colorLink} onChange={e => setColorLink(e.target.value)} onClick={handleColorLink} />
+            <input type="color" value={colorLink} onChange={e => setColorLink(e.target.value)} />
 
 
             <label>Fundo do link</label>
             <input className="mr-4" type="color" value={backBottom} onChange={e => setBackBottom(e.target.value)} />
           </div>
+          {nameLink && (
+            <>
+              <div>
+                <h4 className="text-center text-white font-bold mt-6 mb-6">Pré-visualização...</h4>
+              </div>
+              <Link to={''} className=' max-md:w-11/12 lg:w-2xl mx-auto my-0 p-2 rounded-md text-gray-50 text-lg mb-5'
+                style={{ background: backBottom }}>
+                <span className="flex justify-between items-center px-4" style={{ color: colorLink }}>
 
+                  <p className=" mx-auto">
+                    {nameLink}
+                  </p>
 
+                  <MdDelete size={30} color="white" className="bg-black p-1 cursor-pointer rounded-2xl" />
+                </span>
+              </Link>
+            </>
+          )}
           <div className=" max-md:w-11/12 mt-9 bg-blue-600 w-2xl flex justify-center mx-auto py-1 text-white font-medium rounded-lg mb-16 ">
             <button className="cursor-pointer ">Cadastrar</button>
           </div>
 
-          <Link to={''} className='bg-green-500  max-md:w-11/12 lg:w-2xl mx-auto my-0 p-2 rounded-md text-gray-50 text-lg mb-5'>
-            <span className="flex justify-between items-center px-4">
-              [Inscrições Abertas] - Fábrica de Aplicativos
 
-              <MdDelete size={30} color="red" className="bg-black p-1 cursor-pointer rounded-2xl" />
-            </span>
-          </Link>
         </form>
       </section>
     </div>
