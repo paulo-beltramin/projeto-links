@@ -1,8 +1,17 @@
 import { Link } from "react-router"
 import { Header } from "../../Components/Header"
 import { MdDelete } from "react-icons/md"
-import { useState } from "react"
+import { useEffect, useState, type FormEvent } from "react"
+import { addDoc, collection, onSnapshot, query, } from "firebase/firestore"
+import { db } from "../../Components/Services/db"
 
+
+type linkProps = {
+  id: string,
+  nameLink: string,
+  color: string,
+  background: string
+}
 
 const Admin = () => {
 
@@ -10,13 +19,66 @@ const Admin = () => {
   const [urlLink, setUrlLink] = useState('')
   const [backBottom, setBackBottom] = useState('#000')
   const [colorLink, setColorLink] = useState('#ffff')
+  const [link, setLink] = useState<linkProps[]>([])
+
+  const handleRegisterLinks = (e: FormEvent) => {
+    e.preventDefault()
+
+
+    if (nameLink && urlLink === '') {
+      alert('preencha os campos obrigatorios')
+    }
+
+    addDoc(collection(db, "links"), {
+      nameLink: nameLink,
+      url: urlLink,
+      color: colorLink,
+      background: backBottom,
+      created: new Date()
+    })
+
+      .then(() => {
+        setNameLink('');
+        setUrlLink('')
+        alert('Adicionando com sucesso')
+      })
+      .catch((error) => {
+        alert('Erro as cadastrar' + error)
+      })
+
+  }
+
+  useEffect(() => {
+    const linkRef = collection(db, "links")
+    const getLink = query(linkRef)
+
+    const unSub = onSnapshot(getLink, (snapshot) => {
+      let list = [] as linkProps[]
+
+      snapshot.forEach((doc) => {
+        list.push({
+          id: doc.id,
+          nameLink: doc.data().nameLink,
+          color: doc.data().color,
+          background: doc.data().background
+        })
+      })
+      setLink(list)
+    })
+
+    return () => {
+
+      unSub()
+    }
+  }, [])
+
 
   return (
     <div>
       <Header />
 
       <section>
-        <form className=" flex flex-col ">
+        <form className=" flex flex-col " onSubmit={handleRegisterLinks}>
           <div className=" mx-auto">
             <label className="  text-white mt-9 text-base block">Nome do link</label>
             <input className=" max-md:w-[300px]   bg-white w-2xl py-1 px-4 mt-0.5" type="text" placeholder="Digite o nome do link..."
@@ -59,9 +121,27 @@ const Admin = () => {
           <div className=" max-md:w-11/12 mt-9 bg-blue-600 w-2xl flex justify-center mx-auto py-1 text-white font-medium rounded-lg mb-16 ">
             <button className="cursor-pointer ">Cadastrar</button>
           </div>
-
-
         </form>
+
+
+        {link && (
+          <>
+            {link.map((item) => (
+              <>
+                <Link to={''} key={item.id} className=" flex w-2xl max-md:w-2xl mx-auto p-2 rounded-md text-lg mb-5 " style={{ background: `${item.background}`, color: `${item.color}` }}>
+                  <span className="flex justify-between w-full">
+
+                    <p className=" mx-auto">
+                      {item.nameLink}
+                    </p>
+                    <MdDelete size={30} color="white" className="bg-black p-1 cursor-pointer rounded-2xl" />
+
+                  </span>
+                </Link>
+              </>
+            ))}
+          </>
+        )}
       </section>
     </div>
   )
